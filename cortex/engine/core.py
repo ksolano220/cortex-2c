@@ -3,11 +3,22 @@ from datetime import datetime, timezone
 import json
 
 from cortex.adapters.base import ModelAdapter
+from cortex.engine.executor import apply_files
 from cortex.engine.rules import RuleSet
 
 
 WORKER_SYSTEM = """You are the worker model in Cortex, a dual-model governance system.
 Your job is to complete the user's task. Produce your best work.
+
+When you create or modify files, wrap each one in file sentinels:
+
+<<<FILE relative/path/to/file.py>>>
+file contents here
+<<<END>>>
+
+Use forward slashes in paths. Paths are relative to the workspace. Do not use
+sentinels for code you are only explaining — only for files the caller should
+actually write to disk. One file per block.
 
 When you receive feedback from the overseer, address every point.
 Do not argue — fix the issues and resubmit.
@@ -250,11 +261,23 @@ class Cortex:
 
         return {"output": worker_output, "passed": False, "rounds": self.rules.max_rounds}
 
-    def run(self, task: str, max_respawns: int = 3) -> Dict[str, Any]:
+    def run(
+        self,
+        task: str,
+        max_respawns: int = 3,
+        apply: bool = False,
+        workspace: str = ".",
+    ) -> Dict[str, Any]:
         """Run a single task with self-healing.
 
         If the worker can't pass the overseer, Cortex shuts it down,
         spawns a new agent with memory of the failure, and retries.
+
+        When ``apply=True`` and the overseer passes, any file blocks
+        the worker produced (``<<<FILE ...>>>...<<<END>>>``) are written
+        under ``workspace``. File writes are recorded in the returned
+        ``files_written`` list. See ``cortex/engine/executor.py`` for the
+        safety rails.
         """
         for attempt in range(max_respawns + 1):
             self._agent_generation += 1
@@ -277,6 +300,15 @@ class Cortex:
                     "task": task,
                     "rounds": result["rounds"],
                 })
+
+                files_written: List[Dict[str, Any]] = []
+                if apply:
+                    files_written = apply_files(
+                        result["output"],
+                        workspace=workspace,
+                        on_event=self._emit,
+                    )
+
                 return {
                     "output": result["output"],
                     "passed": True,
@@ -285,6 +317,7 @@ class Cortex:
                     "rounds": result["rounds"],
                     "memory": self.memory.to_dict(),
                     "events": self.events,
+                    "files_written": files_written,
                 }
 
             # Shutdown — record failure and respawn
@@ -313,6 +346,7 @@ class Cortex:
             "rounds": result["rounds"],
             "memory": self.memory.to_dict(),
             "events": self.events,
+            "files_written": [],
         }
 
     def run_plan(
@@ -320,12 +354,17 @@ class Cortex:
         tasks: List[str],
         max_respawns_per_task: int = 3,
         status_path: Optional[str] = None,
+        apply: bool = False,
+        workspace: str = ".",
     ) -> Dict[str, Any]:
         """Execute a full plan — list of tasks, sequentially.
 
         Each task runs through the dual-model loop with self-healing.
         Progress is written to status_path (if provided) so external
         tools (like a phone dashboard) can poll it.
+
+        When ``apply=True``, file blocks from each passing task are
+        written under ``workspace``. See :meth:`run` for details.
         """
         plan_status = {
             "started": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
@@ -352,7 +391,12 @@ class Cortex:
             plan_status["tasks"][i]["status"] = "in_progress"
             _save_status()
 
-            result = self.run(task, max_respawns=max_respawns_per_task)
+            result = self.run(
+                task,
+                max_respawns=max_respawns_per_task,
+                apply=apply,
+                workspace=workspace,
+            )
             results.append(result)
 
             if result["passed"]:
