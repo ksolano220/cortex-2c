@@ -837,7 +837,7 @@ if not st.session_state.username:
 
 # ── Logged in header ──
 
-head_left, head_mid, head_right = st.columns([3, 1, 1])
+head_left, head_right = st.columns([5, 1])
 with head_left:
     st.markdown("""
     <div class="cx-head">
@@ -845,15 +845,14 @@ with head_left:
         <div class="cx-line"></div>
     </div>
     """, unsafe_allow_html=True)
-with head_mid:
-    if st.button("Settings", key="settings_btn", use_container_width=True):
-        st.session_state.show_settings = not st.session_state.get("show_settings", False)
-        st.rerun()
 with head_right:
-    st.markdown(f'<div class="cx-meta" style="text-align:right;padding-top:8px">{html.escape(st.session_state.username)}</div>', unsafe_allow_html=True)
-    if st.button("Log out", key="logout_btn", use_container_width=True):
-        st.session_state.username = None
-        st.rerun()
+    with st.popover(st.session_state.username, use_container_width=True):
+        if st.button("Settings", key="settings_btn", use_container_width=True):
+            st.session_state.show_settings = not st.session_state.get("show_settings", False)
+            st.rerun()
+        if st.button("Log out", key="logout_btn", use_container_width=True):
+            st.session_state.username = None
+            st.rerun()
 
 # ── User vault ──
 
@@ -885,55 +884,67 @@ keys_ready = has_anthropic and has_openai
 if not keys_ready or st.session_state.get("show_settings", False):
 
     if not keys_ready:
-        st.markdown("## Before you start")
-        st.markdown("Cortex uses two AI models that check each other's work. You need API keys from both providers. This takes about 2 minutes.")
-        st.markdown("Your keys are stored **only on your machine** in a secure file. They never leave your computer. Cortex is open source — [check the code](https://github.com/ksolano220/cortex-2c).")
+        st.markdown("## Connect your models")
+        st.markdown("Cortex runs two AI models against each other. Connect Anthropic (the worker) and OpenAI (the overseer) to get started. Both take about 1 minute each.")
+        st.markdown("Keys are stored only on your machine in `~/.cortex/users/{username}/vault.json` with 600 permissions. They never leave your computer. [View the code.](https://github.com/ksolano220/cortex-2c)")
         st.markdown('<div class="cx-section-divider"></div>', unsafe_allow_html=True)
-
-    # Step 1
-    st.markdown("### Step 1: Get your API keys")
 
     col_left, col_right = st.columns(2, gap="large")
+
     with col_left:
+        st.markdown("**Anthropic (Claude)**")
         if has_anthropic:
-            st.markdown("**Anthropic (Claude)** — Connected")
+            st.success("Connected")
+            if st.button("Disconnect", key="disconnect_anthropic"):
+                keys = load_user_vault()
+                keys.pop("ANTHROPIC_API_KEY", None)
+                save_user_vault(keys)
+                st.rerun()
         else:
-            st.markdown("**Anthropic (Claude)**")
-            st.markdown("1. Go to [console.anthropic.com](https://console.anthropic.com)")
-            st.markdown("2. Sign up or log in")
-            st.markdown("3. Go to **API Keys** and create a new key")
-            st.markdown("4. Buy at least $5 in credits under **Billing**")
+            st.markdown("Get your key at [console.anthropic.com](https://console.anthropic.com) under API Keys. You'll need $5 in credits under Billing.")
+            new_anthropic = st.text_input(
+                "Anthropic API key",
+                type="password",
+                placeholder="sk-ant-...",
+                key="anthropic_key_input",
+                label_visibility="collapsed",
+            )
+            if st.button("Save Anthropic key", key="save_anthropic", type="primary", disabled=not new_anthropic.strip()):
+                keys = load_user_vault()
+                keys["ANTHROPIC_API_KEY"] = new_anthropic.strip()
+                save_user_vault(keys)
+                st.rerun()
 
     with col_right:
+        st.markdown("**OpenAI (GPT)**")
         if has_openai:
-            st.markdown("**OpenAI (GPT)** — Connected")
+            st.success("Connected")
+            if st.button("Disconnect", key="disconnect_openai"):
+                keys = load_user_vault()
+                keys.pop("OPENAI_API_KEY", None)
+                save_user_vault(keys)
+                st.rerun()
         else:
-            st.markdown("**OpenAI (GPT)**")
-            st.markdown("1. Go to [platform.openai.com](https://platform.openai.com)")
-            st.markdown("2. Sign up or log in")
-            st.markdown("3. Go to **API Keys** and create a new key")
-            st.markdown("4. Add credits under **Billing**")
+            st.markdown("Get your key at [platform.openai.com](https://platform.openai.com) under API Keys. Add credits under Billing.")
+            new_openai = st.text_input(
+                "OpenAI API key",
+                type="password",
+                placeholder="sk-proj-...",
+                key="openai_key_input",
+                label_visibility="collapsed",
+            )
+            if st.button("Save OpenAI key", key="save_openai", type="primary", disabled=not new_openai.strip()):
+                keys = load_user_vault()
+                keys["OPENAI_API_KEY"] = new_openai.strip()
+                save_user_vault(keys)
+                st.rerun()
 
-    # Step 2
     if not has_anthropic or not has_openai:
         st.markdown('<div class="cx-section-divider"></div>', unsafe_allow_html=True)
-        st.markdown("### Step 2: Add your keys")
-        st.markdown("Open your terminal and run these commands:")
-
-        if not has_anthropic:
-            st.code("python -m cortex vault set ANTHROPIC_API_KEY", language="bash")
-            st.markdown("Paste your Anthropic key when prompted. It won't show on screen — that's normal. Just paste and hit enter.")
-
-        if not has_openai:
-            st.code("python -m cortex vault set OPENAI_API_KEY", language="bash")
-            st.markdown("Same thing — paste your OpenAI key and hit enter.")
-
-        st.markdown('<div class="cx-section-divider"></div>', unsafe_allow_html=True)
-        st.markdown("### Step 3: Refresh this page")
-        st.markdown("Once both keys are saved, refresh this page and you're ready to go.")
+        st.caption("Prefer the terminal? Run `python -m cortex vault set ANTHROPIC_API_KEY` and `python -m cortex vault set OPENAI_API_KEY` then refresh.")
         st.stop()
 
-    # Settings mode — keys already set, just showing status
+    # Settings mode — keys already set
     st.markdown('<div class="cx-section-divider"></div>', unsafe_allow_html=True)
 
 
