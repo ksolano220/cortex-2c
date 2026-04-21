@@ -2,6 +2,10 @@
 
 Two AI models check each other's work so you don't have to.
 
+**Live dashboard demo:** [view on Streamlit](https://ksolano-cortex.streamlit.app/)
+
+![Cortex Dashboard](docs/dashboard.png)
+
 Cortex is a Python SDK that runs one AI model as the **worker** and another as the **overseer**. The worker writes code. The overseer stress-tests it against your rules. They debate until the output passes. If an agent fails too many times, Cortex shuts it down and spawns a new one with memory of what went wrong.
 
 You define the plan. You approve it. You set the rules. Cortex runs the worker-overseer debate and (optionally) writes the approved files to your workspace.
