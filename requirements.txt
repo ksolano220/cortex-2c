@@ -6,3 +6,5 @@ anthropic
 openai
 pyyaml
 PyPDF2
+streamlit
+audioop-lts; python_version >= "3.13"

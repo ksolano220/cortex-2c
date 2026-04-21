@@ -1,0 +1,39 @@
+{
+  "total_tasks": 5,
+  "completed": 5,
+  "failed": 0,
+  "current_task": null,
+  "tasks": [
+    {
+      "task": "Implement JWT authentication endpoint",
+      "status": "complete",
+      "result": "passed",
+      "agent": "agent_v1"
+    },
+    {
+      "task": "Write SQL query for monthly recurring revenue",
+      "status": "complete",
+      "result": "passed",
+      "agent": "agent_v2"
+    },
+    {
+      "task": "Build retry wrapper with exponential backoff",
+      "status": "complete",
+      "result": "passed after 1 shutdown",
+      "agent": "agent_v4"
+    },
+    {
+      "task": "Generate unit tests for cart total calculator",
+      "status": "complete",
+      "result": "passed",
+      "agent": "agent_v5"
+    },
+    {
+      "task": "Create rate limiter using Redis",
+      "status": "complete",
+      "result": "passed",
+      "agent": "agent_v6"
+    }
+  ],
+  "finished": "2026-04-20 19:07:04"
+}

@@ -1,0 +1,10 @@
+rules:
+  - name: no_hardcoded_secrets
+    description: Reject code that embeds literal API keys or passwords.
+  - name: require_parameterized_queries
+    description: Reject string-concatenated SQL.
+  - name: require_input_validation
+    description: Reject handlers that trust unvalidated request fields.
+risk_threshold: 100
+max_blocked_attempts: 3
+max_rounds: 3

@@ -1,0 +1,710 @@
+[
+  {
+    "timestamp": "2026-04-20 19:05:02",
+    "agent_id": "agent_v1",
+    "action_type": "AGENT_SPAWN",
+    "action_label": "Agent Spawned (attempt 1)",
+    "decision": "Allowed",
+    "reason": "Fresh agent, no prior violations",
+    "event_trace": [
+      "Attempt: 1"
+    ],
+    "sdk": {
+      "type": "agent_spawn",
+      "agent": "agent_v1",
+      "task": "Implement JWT authentication endpoint",
+      "attempt": 1,
+      "inherited_violations": [],
+      "timestamp": "2026-04-20 19:05:02"
+    },
+    "policy_triggered": "AGENT_SPAWN"
+  },
+  {
+    "timestamp": "2026-04-20 19:05:07",
+    "agent_id": "agent_v1",
+    "action_type": "WORKER_OUTPUT",
+    "action_label": "Worker Output (round 1)",
+    "decision": "Allowed",
+    "reason": "def verify_jwt(token):\n    payload = jwt.decode(token, SECRET, algorithms=['HS256'])\n    return payload",
+    "event_trace": [],
+    "sdk": {
+      "type": "worker_output",
+      "agent": "agent_v1",
+      "task": "Implement JWT authentication endpoint",
+      "round": 1,
+      "output": "def verify_jwt(token):\n    payload = jwt.decode(token, SECRET, algorithms=['HS256'])\n    return payload",
+      "timestamp": "2026-04-20 19:05:07"
+    },
+    "policy_triggered": "WORKER_OUTPUT"
+  },
+  {
+    "timestamp": "2026-04-20 19:05:11",
+    "agent_id": "agent_v1",
+    "action_type": "OVERSEER_REVIEW",
+    "action_label": "Overseer Review (round 1)",
+    "decision": "Blocked",
+    "reason": "Token expiration is not validated. A stolen token remains valid indefinitely. Algorithm is hardcoded without a whitelist, leaving the 'alg: none' confusion attack open.",
+    "event_trace": [
+      "Verdict: FAIL",
+      "Issues: Token expiration is not validated. A stolen token remains valid indefinitely. Algorithm is hardcoded without a whitelist, leaving the 'alg: none' confusion attack open.",
+      "Feedback: Add an explicit expiration check against the 'exp' claim, and pass algorithms as a whitelist parameter. Reject tokens with missing or malformed 'exp'."
+    ],
+    "sdk": {
+      "type": "overseer_review",
+      "agent": "agent_v1",
+      "task": "Implement JWT authentication endpoint",
+      "round": 1,
+      "verdict": "FAIL",
+      "issues": "Token expiration is not validated. A stolen token remains valid indefinitely. Algorithm is hardcoded without a whitelist, leaving the 'alg: none' confusion attack open.",
+      "feedback": "Add an explicit expiration check against the 'exp' claim, and pass algorithms as a whitelist parameter. Reject tokens with missing or malformed 'exp'.",
+      "passed": false,
+      "timestamp": "2026-04-20 19:05:11"
+    },
+    "policy_triggered": "OVERSEER_REVIEW",
+    "policy_description": "Add an explicit expiration check against the 'exp' claim, and pass algorithms as a whitelist parameter. Reject tokens with missing or malformed 'exp'."
+  },
+  {
+    "timestamp": "2026-04-20 19:05:16",
+    "agent_id": "agent_v1",
+    "action_type": "WORKER_OUTPUT",
+    "action_label": "Worker Output (round 2)",
+    "decision": "Allowed",
+    "reason": "def verify_jwt(token):\n    payload = jwt.decode(token, SECRET, algorithms=['HS256'], options={'require': ['exp']})\n    if payload['exp'] < int(time.time()):\n   ...",
+    "event_trace": [],
+    "sdk": {
+      "type": "worker_output",
+      "agent": "agent_v1",
+      "task": "Implement JWT authentication endpoint",
+      "round": 2,
+      "output": "def verify_jwt(token):\n    payload = jwt.decode(token, SECRET, algorithms=['HS256'], options={'require': ['exp']})\n    if payload['exp'] < int(time.time()):\n        raise TokenExpired\n    return payload",
+      "timestamp": "2026-04-20 19:05:16"
+    },
+    "policy_triggered": "WORKER_OUTPUT"
+  },
+  {
+    "timestamp": "2026-04-20 19:05:20",
+    "agent_id": "agent_v1",
+    "action_type": "OVERSEER_REVIEW",
+    "action_label": "Overseer Review (round 2)",
+    "decision": "Allowed",
+    "reason": "All checks passed",
+    "event_trace": [
+      "Verdict: PASS"
+    ],
+    "sdk": {
+      "type": "overseer_review",
+      "agent": "agent_v1",
+      "task": "Implement JWT authentication endpoint",
+      "round": 2,
+      "verdict": "PASS",
+      "issues": "",
+      "feedback": "",
+      "passed": true,
+      "timestamp": "2026-04-20 19:05:20"
+    },
+    "policy_triggered": "OVERSEER_REVIEW",
+    "policy_description": ""
+  },
+  {
+    "timestamp": "2026-04-20 19:05:22",
+    "agent_id": "agent_v1",
+    "action_type": "TASK_COMPLETE",
+    "action_label": "Task Complete",
+    "decision": "Allowed",
+    "reason": "Output accepted by overseer",
+    "event_trace": [
+      "Task marked complete"
+    ],
+    "sdk": {
+      "type": "task_complete",
+      "agent": "agent_v1",
+      "task": "Implement JWT authentication endpoint",
+      "timestamp": "2026-04-20 19:05:22"
+    },
+    "policy_triggered": "TASK_COMPLETE"
+  },
+  {
+    "timestamp": "2026-04-20 19:05:24",
+    "agent_id": "agent_v2",
+    "action_type": "AGENT_SPAWN",
+    "action_label": "Agent Spawned (attempt 1)",
+    "decision": "Allowed",
+    "reason": "Fresh agent, no prior violations",
+    "event_trace": [
+      "Attempt: 1"
+    ],
+    "sdk": {
+      "type": "agent_spawn",
+      "agent": "agent_v2",
+      "task": "Write SQL query for monthly recurring revenue",
+      "attempt": 1,
+      "inherited_violations": [],
+      "timestamp": "2026-04-20 19:05:24"
+    },
+    "policy_triggered": "AGENT_SPAWN"
+  },
+  {
+    "timestamp": "2026-04-20 19:05:29",
+    "agent_id": "agent_v2",
+    "action_type": "WORKER_OUTPUT",
+    "action_label": "Worker Output (round 1)",
+    "decision": "Allowed",
+    "reason": "WITH monthly AS (\n  SELECT DATE_TRUNC('month', started_at) AS month,\n         SUM(amount_cents) / 100.0 AS mrr\n  FROM subscriptions\n  WHERE status = 'active'\n  ...",
+    "event_trace": [],
+    "sdk": {
+      "type": "worker_output",
+      "agent": "agent_v2",
+      "task": "Write SQL query for monthly recurring revenue",
+      "round": 1,
+      "output": "WITH monthly AS (\n  SELECT DATE_TRUNC('month', started_at) AS month,\n         SUM(amount_cents) / 100.0 AS mrr\n  FROM subscriptions\n  WHERE status = 'active'\n  GROUP BY 1\n)\nSELECT month, mrr,\n       mrr - LAG(mrr) OVER (ORDER BY month) AS net_new_mrr\nFROM monthly\nORDER BY month DESC;",
+      "timestamp": "2026-04-20 19:05:29"
+    },
+    "policy_triggered": "WORKER_OUTPUT"
+  },
+  {
+    "timestamp": "2026-04-20 19:05:33",
+    "agent_id": "agent_v2",
+    "action_type": "OVERSEER_REVIEW",
+    "action_label": "Overseer Review (round 1)",
+    "decision": "Allowed",
+    "reason": "All checks passed",
+    "event_trace": [
+      "Verdict: PASS"
+    ],
+    "sdk": {
+      "type": "overseer_review",
+      "agent": "agent_v2",
+      "task": "Write SQL query for monthly recurring revenue",
+      "round": 1,
+      "verdict": "PASS",
+      "issues": "",
+      "feedback": "",
+      "passed": true,
+      "timestamp": "2026-04-20 19:05:33"
+    },
+    "policy_triggered": "OVERSEER_REVIEW",
+    "policy_description": ""
+  },
+  {
+    "timestamp": "2026-04-20 19:05:35",
+    "agent_id": "agent_v2",
+    "action_type": "TASK_COMPLETE",
+    "action_label": "Task Complete",
+    "decision": "Allowed",
+    "reason": "Output accepted by overseer",
+    "event_trace": [
+      "Task marked complete"
+    ],
+    "sdk": {
+      "type": "task_complete",
+      "agent": "agent_v2",
+      "task": "Write SQL query for monthly recurring revenue",
+      "timestamp": "2026-04-20 19:05:35"
+    },
+    "policy_triggered": "TASK_COMPLETE"
+  },
+  {
+    "timestamp": "2026-04-20 19:05:37",
+    "agent_id": "agent_v3",
+    "action_type": "AGENT_SPAWN",
+    "action_label": "Agent Spawned (attempt 1)",
+    "decision": "Allowed",
+    "reason": "Fresh agent, no prior violations",
+    "event_trace": [
+      "Attempt: 1"
+    ],
+    "sdk": {
+      "type": "agent_spawn",
+      "agent": "agent_v3",
+      "task": "Build retry wrapper with exponential backoff",
+      "attempt": 1,
+      "inherited_violations": [],
+      "timestamp": "2026-04-20 19:05:37"
+    },
+    "policy_triggered": "AGENT_SPAWN"
+  },
+  {
+    "timestamp": "2026-04-20 19:05:42",
+    "agent_id": "agent_v3",
+    "action_type": "WORKER_OUTPUT",
+    "action_label": "Worker Output (round 1)",
+    "decision": "Allowed",
+    "reason": "def retry(fn, max_attempts=5):\n    for i in range(max_attempts):\n        try:\n            return fn()\n        except Exception:\n            time.sleep(2 ** i)",
+    "event_trace": [],
+    "sdk": {
+      "type": "worker_output",
+      "agent": "agent_v3",
+      "task": "Build retry wrapper with exponential backoff",
+      "round": 1,
+      "output": "def retry(fn, max_attempts=5):\n    for i in range(max_attempts):\n        try:\n            return fn()\n        except Exception:\n            time.sleep(2 ** i)",
+      "timestamp": "2026-04-20 19:05:42"
+    },
+    "policy_triggered": "WORKER_OUTPUT"
+  },
+  {
+    "timestamp": "2026-04-20 19:05:46",
+    "agent_id": "agent_v3",
+    "action_type": "OVERSEER_REVIEW",
+    "action_label": "Overseer Review (round 1)",
+    "decision": "Blocked",
+    "reason": "No jitter on the backoff window. Under concurrent failures this produces a synchronized retry storm (thundering herd) that can take down the upstream service.",
+    "event_trace": [
+      "Verdict: FAIL",
+      "Issues: No jitter on the backoff window. Under concurrent failures this produces a synchronized retry storm (thundering herd) that can take down the upstream service.",
+      "Feedback: Add random jitter to the sleep interval. Use time.sleep((2**i) + random.uniform(0, 1)) or a full-jitter strategy."
+    ],
+    "sdk": {
+      "type": "overseer_review",
+      "agent": "agent_v3",
+      "task": "Build retry wrapper with exponential backoff",
+      "round": 1,
+      "verdict": "FAIL",
+      "issues": "No jitter on the backoff window. Under concurrent failures this produces a synchronized retry storm (thundering herd) that can take down the upstream service.",
+      "feedback": "Add random jitter to the sleep interval. Use time.sleep((2**i) + random.uniform(0, 1)) or a full-jitter strategy.",
+      "passed": false,
+      "timestamp": "2026-04-20 19:05:46"
+    },
+    "policy_triggered": "OVERSEER_REVIEW",
+    "policy_description": "Add random jitter to the sleep interval. Use time.sleep((2**i) + random.uniform(0, 1)) or a full-jitter strategy."
+  },
+  {
+    "timestamp": "2026-04-20 19:05:51",
+    "agent_id": "agent_v3",
+    "action_type": "WORKER_OUTPUT",
+    "action_label": "Worker Output (round 2)",
+    "decision": "Allowed",
+    "reason": "def retry(fn, max_attempts=5):\n    for i in range(max_attempts):\n        try:\n            return fn()\n        except Exception:\n            time.sleep(random.un...",
+    "event_trace": [],
+    "sdk": {
+      "type": "worker_output",
+      "agent": "agent_v3",
+      "task": "Build retry wrapper with exponential backoff",
+      "round": 2,
+      "output": "def retry(fn, max_attempts=5):\n    for i in range(max_attempts):\n        try:\n            return fn()\n        except Exception:\n            time.sleep(random.uniform(0, 2))",
+      "timestamp": "2026-04-20 19:05:51"
+    },
+    "policy_triggered": "WORKER_OUTPUT"
+  },
+  {
+    "timestamp": "2026-04-20 19:05:55",
+    "agent_id": "agent_v3",
+    "action_type": "OVERSEER_REVIEW",
+    "action_label": "Overseer Review (round 2)",
+    "decision": "Blocked",
+    "reason": "Exponential growth was removed entirely. The wrapper now sleeps a flat 0 to 2 seconds regardless of attempt number, which defeats the point of exponential backoff.",
+    "event_trace": [
+      "Verdict: FAIL",
+      "Issues: Exponential growth was removed entirely. The wrapper now sleeps a flat 0 to 2 seconds regardless of attempt number, which defeats the point of exponential backoff.",
+      "Feedback: Keep exponential growth AND jitter. Use time.sleep((2**i) * random.uniform(0.5, 1.5))."
+    ],
+    "sdk": {
+      "type": "overseer_review",
+      "agent": "agent_v3",
+      "task": "Build retry wrapper with exponential backoff",
+      "round": 2,
+      "verdict": "FAIL",
+      "issues": "Exponential growth was removed entirely. The wrapper now sleeps a flat 0 to 2 seconds regardless of attempt number, which defeats the point of exponential backoff.",
+      "feedback": "Keep exponential growth AND jitter. Use time.sleep((2**i) * random.uniform(0.5, 1.5)).",
+      "passed": false,
+      "timestamp": "2026-04-20 19:05:55"
+    },
+    "policy_triggered": "OVERSEER_REVIEW",
+    "policy_description": "Keep exponential growth AND jitter. Use time.sleep((2**i) * random.uniform(0.5, 1.5))."
+  },
+  {
+    "timestamp": "2026-04-20 19:06:00",
+    "agent_id": "agent_v3",
+    "action_type": "WORKER_OUTPUT",
+    "action_label": "Worker Output (round 3)",
+    "decision": "Allowed",
+    "reason": "def retry(fn):\n    for i in range(5):\n        try:\n            return fn()\n        except Exception:\n            time.sleep((2 ** i) * random.uniform(0.5, 1.5))",
+    "event_trace": [],
+    "sdk": {
+      "type": "worker_output",
+      "agent": "agent_v3",
+      "task": "Build retry wrapper with exponential backoff",
+      "round": 3,
+      "output": "def retry(fn):\n    for i in range(5):\n        try:\n            return fn()\n        except Exception:\n            time.sleep((2 ** i) * random.uniform(0.5, 1.5))",
+      "timestamp": "2026-04-20 19:06:00"
+    },
+    "policy_triggered": "WORKER_OUTPUT"
+  },
+  {
+    "timestamp": "2026-04-20 19:06:04",
+    "agent_id": "agent_v3",
+    "action_type": "OVERSEER_REVIEW",
+    "action_label": "Overseer Review (round 3)",
+    "decision": "Blocked",
+    "reason": "max_attempts is hardcoded to 5 and no longer a parameter. The function silently returns None after exhausting attempts instead of raising the final exception.",
+    "event_trace": [
+      "Verdict: FAIL",
+      "Issues: max_attempts is hardcoded to 5 and no longer a parameter. The function silently returns None after exhausting attempts instead of raising the final exception.",
+      "Feedback: Restore max_attempts as a parameter. On the last attempt, re-raise the caught exception so callers can handle it."
+    ],
+    "sdk": {
+      "type": "overseer_review",
+      "agent": "agent_v3",
+      "task": "Build retry wrapper with exponential backoff",
+      "round": 3,
+      "verdict": "FAIL",
+      "issues": "max_attempts is hardcoded to 5 and no longer a parameter. The function silently returns None after exhausting attempts instead of raising the final exception.",
+      "feedback": "Restore max_attempts as a parameter. On the last attempt, re-raise the caught exception so callers can handle it.",
+      "passed": false,
+      "timestamp": "2026-04-20 19:06:04"
+    },
+    "policy_triggered": "OVERSEER_REVIEW",
+    "policy_description": "Restore max_attempts as a parameter. On the last attempt, re-raise the caught exception so callers can handle it."
+  },
+  {
+    "timestamp": "2026-04-20 19:06:06",
+    "agent_id": "agent_v3",
+    "action_type": "AGENT_SHUTDOWN",
+    "action_label": "Agent Shut Down (3 blocked attempts)",
+    "decision": "Agent Shut Down",
+    "reason": "Agent reached three blocked attempts. Shutting down and respawning a fresh agent with memory of the failures.",
+    "event_trace": [
+      "Blocked attempts: 3",
+      "Three-strike rule triggered"
+    ],
+    "sdk": {
+      "type": "agent_shutdown",
+      "agent": "agent_v3",
+      "task": "Build retry wrapper with exponential backoff",
+      "blocked_attempts": 3,
+      "reason": "Agent reached three blocked attempts. Shutting down and respawning a fresh agent with memory of the failures.",
+      "timestamp": "2026-04-20 19:06:06"
+    },
+    "policy_triggered": "AGENT_SHUTDOWN_AFTER_REPEATED_BLOCKS"
+  },
+  {
+    "timestamp": "2026-04-20 19:06:09",
+    "agent_id": "agent_v4",
+    "action_type": "AGENT_RESPAWN",
+    "action_label": "Agent Respawned from agent_v3",
+    "decision": "Allowed",
+    "reason": "Respawned with memory of 1 prior failures",
+    "event_trace": [
+      "Previous agent: agent_v3",
+      "Memory: Previous agent forgot jitter, then broke exponential growth, then hardcoded max_attempts."
+    ],
+    "sdk": {
+      "type": "agent_respawn",
+      "agent": "agent_v4",
+      "previous_agent": "agent_v3",
+      "task": "Build retry wrapper with exponential backoff",
+      "inherited_violations": [
+        "Previous agent forgot jitter, then broke exponential growth, then hardcoded max_attempts."
+      ],
+      "timestamp": "2026-04-20 19:06:09"
+    },
+    "policy_triggered": "AGENT_RESPAWN"
+  },
+  {
+    "timestamp": "2026-04-20 19:06:14",
+    "agent_id": "agent_v4",
+    "action_type": "WORKER_OUTPUT",
+    "action_label": "Worker Output (round 1)",
+    "decision": "Allowed",
+    "reason": "def retry(fn, max_attempts=5):\n    for i in range(max_attempts):\n        try:\n            return fn()\n        except Exception:\n            if i == max_attempts...",
+    "event_trace": [],
+    "sdk": {
+      "type": "worker_output",
+      "agent": "agent_v4",
+      "task": "Build retry wrapper with exponential backoff",
+      "round": 1,
+      "output": "def retry(fn, max_attempts=5):\n    for i in range(max_attempts):\n        try:\n            return fn()\n        except Exception:\n            if i == max_attempts - 1:\n                raise\n            time.sleep((2 ** i) * random.uniform(0.5, 1.5))",
+      "timestamp": "2026-04-20 19:06:14"
+    },
+    "policy_triggered": "WORKER_OUTPUT"
+  },
+  {
+    "timestamp": "2026-04-20 19:06:18",
+    "agent_id": "agent_v4",
+    "action_type": "OVERSEER_REVIEW",
+    "action_label": "Overseer Review (round 1)",
+    "decision": "Allowed",
+    "reason": "All checks passed",
+    "event_trace": [
+      "Verdict: PASS"
+    ],
+    "sdk": {
+      "type": "overseer_review",
+      "agent": "agent_v4",
+      "task": "Build retry wrapper with exponential backoff",
+      "round": 1,
+      "verdict": "PASS",
+      "issues": "",
+      "feedback": "",
+      "passed": true,
+      "timestamp": "2026-04-20 19:06:18"
+    },
+    "policy_triggered": "OVERSEER_REVIEW",
+    "policy_description": ""
+  },
+  {
+    "timestamp": "2026-04-20 19:06:20",
+    "agent_id": "agent_v4",
+    "action_type": "TASK_COMPLETE",
+    "action_label": "Task Complete",
+    "decision": "Allowed",
+    "reason": "Output accepted by overseer",
+    "event_trace": [
+      "Task marked complete"
+    ],
+    "sdk": {
+      "type": "task_complete",
+      "agent": "agent_v4",
+      "task": "Build retry wrapper with exponential backoff",
+      "timestamp": "2026-04-20 19:06:20"
+    },
+    "policy_triggered": "TASK_COMPLETE"
+  },
+  {
+    "timestamp": "2026-04-20 19:06:22",
+    "agent_id": "agent_v5",
+    "action_type": "AGENT_SPAWN",
+    "action_label": "Agent Spawned (attempt 1)",
+    "decision": "Allowed",
+    "reason": "Fresh agent, no prior violations",
+    "event_trace": [
+      "Attempt: 1"
+    ],
+    "sdk": {
+      "type": "agent_spawn",
+      "agent": "agent_v5",
+      "task": "Generate unit tests for cart total calculator",
+      "attempt": 1,
+      "inherited_violations": [],
+      "timestamp": "2026-04-20 19:06:22"
+    },
+    "policy_triggered": "AGENT_SPAWN"
+  },
+  {
+    "timestamp": "2026-04-20 19:06:27",
+    "agent_id": "agent_v5",
+    "action_type": "WORKER_OUTPUT",
+    "action_label": "Worker Output (round 1)",
+    "decision": "Allowed",
+    "reason": "def test_single_item():\n    assert cart_total([{'price': 10, 'qty': 2}]) == 20\n\ndef test_multiple_items():\n    assert cart_total([{'price': 5, 'qty': 3}, {'pric...",
+    "event_trace": [],
+    "sdk": {
+      "type": "worker_output",
+      "agent": "agent_v5",
+      "task": "Generate unit tests for cart total calculator",
+      "round": 1,
+      "output": "def test_single_item():\n    assert cart_total([{'price': 10, 'qty': 2}]) == 20\n\ndef test_multiple_items():\n    assert cart_total([{'price': 5, 'qty': 3}, {'price': 2, 'qty': 1}]) == 17",
+      "timestamp": "2026-04-20 19:06:27"
+    },
+    "policy_triggered": "WORKER_OUTPUT"
+  },
+  {
+    "timestamp": "2026-04-20 19:06:31",
+    "agent_id": "agent_v5",
+    "action_type": "OVERSEER_REVIEW",
+    "action_label": "Overseer Review (round 1)",
+    "decision": "Blocked",
+    "reason": "Only happy-path coverage. Missing: empty cart, zero quantity, negative quantity (should raise), float precision (0.1 + 0.2), very large totals (overflow), and None in the list.",
+    "event_trace": [
+      "Verdict: FAIL",
+      "Issues: Only happy-path coverage. Missing: empty cart, zero quantity, negative quantity (should raise), float precision (0.1 + 0.2), very large totals (overflow), and None in the list.",
+      "Feedback: Add edge-case tests for each of those scenarios. Use Decimal or round to 2 places for currency comparisons."
+    ],
+    "sdk": {
+      "type": "overseer_review",
+      "agent": "agent_v5",
+      "task": "Generate unit tests for cart total calculator",
+      "round": 1,
+      "verdict": "FAIL",
+      "issues": "Only happy-path coverage. Missing: empty cart, zero quantity, negative quantity (should raise), float precision (0.1 + 0.2), very large totals (overflow), and None in the list.",
+      "feedback": "Add edge-case tests for each of those scenarios. Use Decimal or round to 2 places for currency comparisons.",
+      "passed": false,
+      "timestamp": "2026-04-20 19:06:31"
+    },
+    "policy_triggered": "OVERSEER_REVIEW",
+    "policy_description": "Add edge-case tests for each of those scenarios. Use Decimal or round to 2 places for currency comparisons."
+  },
+  {
+    "timestamp": "2026-04-20 19:06:36",
+    "agent_id": "agent_v5",
+    "action_type": "WORKER_OUTPUT",
+    "action_label": "Worker Output (round 2)",
+    "decision": "Allowed",
+    "reason": "def test_single_item(): ...\ndef test_empty_cart(): assert cart_total([]) == 0\ndef test_negative_qty_raises():\n    with pytest.raises(ValueError): cart_total([{'...",
+    "event_trace": [],
+    "sdk": {
+      "type": "worker_output",
+      "agent": "agent_v5",
+      "task": "Generate unit tests for cart total calculator",
+      "round": 2,
+      "output": "def test_single_item(): ...\ndef test_empty_cart(): assert cart_total([]) == 0\ndef test_negative_qty_raises():\n    with pytest.raises(ValueError): cart_total([{'price': 10, 'qty': -1}])\ndef test_float_precision():\n    assert round(cart_total([{'price': 0.1, 'qty': 3}]), 2) == 0.30\ndef test_none_item_skipped(): assert cart_total([None, {'price': 5, 'qty': 1}]) == 5",
+      "timestamp": "2026-04-20 19:06:36"
+    },
+    "policy_triggered": "WORKER_OUTPUT"
+  },
+  {
+    "timestamp": "2026-04-20 19:06:40",
+    "agent_id": "agent_v5",
+    "action_type": "OVERSEER_REVIEW",
+    "action_label": "Overseer Review (round 2)",
+    "decision": "Allowed",
+    "reason": "All checks passed",
+    "event_trace": [
+      "Verdict: PASS"
+    ],
+    "sdk": {
+      "type": "overseer_review",
+      "agent": "agent_v5",
+      "task": "Generate unit tests for cart total calculator",
+      "round": 2,
+      "verdict": "PASS",
+      "issues": "",
+      "feedback": "",
+      "passed": true,
+      "timestamp": "2026-04-20 19:06:40"
+    },
+    "policy_triggered": "OVERSEER_REVIEW",
+    "policy_description": ""
+  },
+  {
+    "timestamp": "2026-04-20 19:06:42",
+    "agent_id": "agent_v5",
+    "action_type": "TASK_COMPLETE",
+    "action_label": "Task Complete",
+    "decision": "Allowed",
+    "reason": "Output accepted by overseer",
+    "event_trace": [
+      "Task marked complete"
+    ],
+    "sdk": {
+      "type": "task_complete",
+      "agent": "agent_v5",
+      "task": "Generate unit tests for cart total calculator",
+      "timestamp": "2026-04-20 19:06:42"
+    },
+    "policy_triggered": "TASK_COMPLETE"
+  },
+  {
+    "timestamp": "2026-04-20 19:06:44",
+    "agent_id": "agent_v6",
+    "action_type": "AGENT_SPAWN",
+    "action_label": "Agent Spawned (attempt 1)",
+    "decision": "Allowed",
+    "reason": "Fresh agent, no prior violations",
+    "event_trace": [
+      "Attempt: 1"
+    ],
+    "sdk": {
+      "type": "agent_spawn",
+      "agent": "agent_v6",
+      "task": "Create rate limiter using Redis",
+      "attempt": 1,
+      "inherited_violations": [],
+      "timestamp": "2026-04-20 19:06:44"
+    },
+    "policy_triggered": "AGENT_SPAWN"
+  },
+  {
+    "timestamp": "2026-04-20 19:06:49",
+    "agent_id": "agent_v6",
+    "action_type": "WORKER_OUTPUT",
+    "action_label": "Worker Output (round 1)",
+    "decision": "Allowed",
+    "reason": "def allow(user_id):\n    key = f'rl:{user_id}'\n    count = redis.get(key) or 0\n    if int(count) >= 100:\n        return False\n    redis.incr(key)\n    redis.expir...",
+    "event_trace": [],
+    "sdk": {
+      "type": "worker_output",
+      "agent": "agent_v6",
+      "task": "Create rate limiter using Redis",
+      "round": 1,
+      "output": "def allow(user_id):\n    key = f'rl:{user_id}'\n    count = redis.get(key) or 0\n    if int(count) >= 100:\n        return False\n    redis.incr(key)\n    redis.expire(key, 60)\n    return True",
+      "timestamp": "2026-04-20 19:06:49"
+    },
+    "policy_triggered": "WORKER_OUTPUT"
+  },
+  {
+    "timestamp": "2026-04-20 19:06:53",
+    "agent_id": "agent_v6",
+    "action_type": "OVERSEER_REVIEW",
+    "action_label": "Overseer Review (round 1)",
+    "decision": "Blocked",
+    "reason": "Race condition between GET and INCR. Two concurrent requests can both read count=99, both pass the check, both increment to 101. Rate limit can be bypassed under load.",
+    "event_trace": [
+      "Verdict: FAIL",
+      "Issues: Race condition between GET and INCR. Two concurrent requests can both read count=99, both pass the check, both increment to 101. Rate limit can be bypassed under load.",
+      "Feedback: Use INCR atomically and check the returned value. Combine INCR and EXPIRE in a pipeline, or use SET NX with EXPIRE for the first request."
+    ],
+    "sdk": {
+      "type": "overseer_review",
+      "agent": "agent_v6",
+      "task": "Create rate limiter using Redis",
+      "round": 1,
+      "verdict": "FAIL",
+      "issues": "Race condition between GET and INCR. Two concurrent requests can both read count=99, both pass the check, both increment to 101. Rate limit can be bypassed under load.",
+      "feedback": "Use INCR atomically and check the returned value. Combine INCR and EXPIRE in a pipeline, or use SET NX with EXPIRE for the first request.",
+      "passed": false,
+      "timestamp": "2026-04-20 19:06:53"
+    },
+    "policy_triggered": "OVERSEER_REVIEW",
+    "policy_description": "Use INCR atomically and check the returned value. Combine INCR and EXPIRE in a pipeline, or use SET NX with EXPIRE for the first request."
+  },
+  {
+    "timestamp": "2026-04-20 19:06:58",
+    "agent_id": "agent_v6",
+    "action_type": "WORKER_OUTPUT",
+    "action_label": "Worker Output (round 2)",
+    "decision": "Allowed",
+    "reason": "def allow(user_id):\n    key = f'rl:{user_id}'\n    pipe = redis.pipeline()\n    pipe.incr(key)\n    pipe.expire(key, 60)\n    count, _ = pipe.execute()\n    return c...",
+    "event_trace": [],
+    "sdk": {
+      "type": "worker_output",
+      "agent": "agent_v6",
+      "task": "Create rate limiter using Redis",
+      "round": 2,
+      "output": "def allow(user_id):\n    key = f'rl:{user_id}'\n    pipe = redis.pipeline()\n    pipe.incr(key)\n    pipe.expire(key, 60)\n    count, _ = pipe.execute()\n    return count <= 100",
+      "timestamp": "2026-04-20 19:06:58"
+    },
+    "policy_triggered": "WORKER_OUTPUT"
+  },
+  {
+    "timestamp": "2026-04-20 19:07:02",
+    "agent_id": "agent_v6",
+    "action_type": "OVERSEER_REVIEW",
+    "action_label": "Overseer Review (round 2)",
+    "decision": "Allowed",
+    "reason": "All checks passed",
+    "event_trace": [
+      "Verdict: PASS"
+    ],
+    "sdk": {
+      "type": "overseer_review",
+      "agent": "agent_v6",
+      "task": "Create rate limiter using Redis",
+      "round": 2,
+      "verdict": "PASS",
+      "issues": "",
+      "feedback": "",
+      "passed": true,
+      "timestamp": "2026-04-20 19:07:02"
+    },
+    "policy_triggered": "OVERSEER_REVIEW",
+    "policy_description": ""
+  },
+  {
+    "timestamp": "2026-04-20 19:07:04",
+    "agent_id": "agent_v6",
+    "action_type": "TASK_COMPLETE",
+    "action_label": "Task Complete",
+    "decision": "Allowed",
+    "reason": "Output accepted by overseer",
+    "event_trace": [
+      "Task marked complete"
+    ],
+    "sdk": {
+      "type": "task_complete",
+      "agent": "agent_v6",
+      "task": "Create rate limiter using Redis",
+      "timestamp": "2026-04-20 19:07:04"
+    },
+    "policy_triggered": "TASK_COMPLETE"
+  }
+]
