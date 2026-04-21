@@ -963,7 +963,7 @@ if not keys_ready or st.session_state.get("show_settings", False):
     if not keys_ready:
         st.markdown("## Connect your models")
         st.markdown("Cortex runs two AI models against each other. Connect Anthropic (the worker) and OpenAI (the overseer) to get started. Both take about 1 minute each.")
-        st.markdown("Keys are stored only on your machine in `~/.cortex/users/{username}/vault.json` with 600 permissions. They never leave your computer. [View the code.](https://github.com/ksolano220/cortex-2c)")
+        st.markdown("Keys are stored only on your machine in `~/.cortex/users/{username}/vault.json` with 600 permissions. They never leave your computer. [View the code.](https://github.com/ksolano220/cortex)")
         st.markdown('<div class="cx-section-divider"></div>', unsafe_allow_html=True)
 
     col_left, col_right = st.columns(2, gap="large")
