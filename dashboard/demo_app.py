@@ -10,6 +10,7 @@ user-identifying information.
 Run locally:  streamlit run dashboard/demo_app.py
 """
 
+import base64
 import json
 import html
 import sys
@@ -36,6 +37,19 @@ RISK_THRESHOLD = 100
 # All demo data lives in this directory, committed to the repo so the hosted
 # dashboard can read it without any per-user file system state.
 DEMO_DATA_DIR = Path(__file__).resolve().parent / "demo_data"
+LOGO_PATH = Path(__file__).resolve().parent.parent / "docs" / "logo.png"
+
+
+def _logo_tag(height_px: int = 56) -> str:
+    """Return an <img> tag with the Cortex logo embedded as base64, or a text fallback."""
+    if LOGO_PATH.exists():
+        with open(LOGO_PATH, "rb") as f:
+            encoded = base64.b64encode(f.read()).decode("ascii")
+        return (
+            f'<img src="data:image/png;base64,{encoded}" alt="Cortex" '
+            f'style="height:{height_px}px;margin:0;padding:0"/>'
+        )
+    return '<div class="cx-logo">Cortex</div>'
 
 
 def get_user_paths():
@@ -288,12 +302,12 @@ st.markdown('<meta name="viewport" content="width=device-width, initial-scale=1.
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 
 .stApp {
     background: #fafafa;
-    color: #1a1a1a;
-    font-family: 'Inter', -apple-system, sans-serif;
+    color: #121631;
+    font-family: 'Quicksand', -apple-system, sans-serif;
 }
 
 .block-container {
@@ -313,12 +327,12 @@ st.markdown("""
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #1a1a1a;
+    color: #121631;
 }
 
 .cx-line {
     height: 1px;
-    background: #1a1a1a;
+    background: #121631;
     margin-top: 14px;
 }
 
@@ -340,7 +354,7 @@ st.markdown("""
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #1a1a1a;
+    color: #121631;
 }
 
 .cx-plan-progress {
@@ -359,7 +373,7 @@ st.markdown("""
 
 .cx-plan-bar-fill {
     height: 100%;
-    background: #1a1a1a;
+    background: #72C2C3;
     border-radius: 2px;
     transition: width 0.3s ease;
 }
@@ -391,15 +405,15 @@ st.markdown("""
 }
 
 .cx-task-complete {
-    border-color: #1a1a1a;
-    background: #1a1a1a;
+    border-color: #121631;
+    background: #121631;
     color: white;
 }
 
 .cx-task-progress {
-    border-color: #1a1a1a;
+    border-color: #121631;
     background: transparent;
-    color: #1a1a1a;
+    color: #121631;
     animation: cx-pulse 2s ease-in-out infinite;
 }
 
@@ -410,9 +424,9 @@ st.markdown("""
 }
 
 .cx-task-failed {
-    border-color: #1a1a1a;
+    border-color: #121631;
     background: #f5f5f5;
-    color: #1a1a1a;
+    color: #121631;
 }
 
 @keyframes cx-pulse {
@@ -428,7 +442,7 @@ st.markdown("""
 .cx-task-name {
     font-size: 20px;
     font-weight: 400;
-    color: #1a1a1a;
+    color: #121631;
     line-height: 1.4;
 }
 
@@ -481,7 +495,7 @@ st.markdown("""
 .cx-agent-name {
     font-size: 16px;
     font-weight: 500;
-    color: #1a1a1a;
+    color: #121631;
 }
 
 .cx-agent-stats {
@@ -496,7 +510,7 @@ st.markdown("""
 .cx-stat-val {
     font-size: 22px;
     font-weight: 300;
-    color: #1a1a1a;
+    color: #121631;
     line-height: 1;
 }
 
@@ -534,7 +548,7 @@ st.markdown("""
 .cx-card-action {
     font-size: 20px;
     font-weight: 500;
-    color: #1a1a1a;
+    color: #121631;
     line-height: 1.3;
 }
 
@@ -578,7 +592,7 @@ st.markdown("""
 
 .cx-dot-allowed { background: #34c759; }
 .cx-dot-blocked { background: #ff9500; }
-.cx-dot-shutdown { background: #1a1a1a; }
+.cx-dot-shutdown { background: #121631; }
 .cx-dot-review { background: #007aff; }
 
 .cx-meta {
@@ -638,7 +652,7 @@ st.markdown("""
 .cx-detail-value {
     font-size: 16px;
     font-weight: 400;
-    color: #1a1a1a;
+    color: #121631;
 }
 
 /* ── Empty state ── */
@@ -657,7 +671,7 @@ div[data-baseweb="select"] > div {
     background: #ffffff !important;
     border-radius: 8px !important;
     border: 1px solid #e0e0e0 !important;
-    color: #1a1a1a !important;
+    color: #121631 !important;
     font-size: 16px !important;
 }
 
@@ -674,7 +688,7 @@ div[data-testid="stTextInput"] input {
     border: 1px solid #e0e0e0 !important;
     border-radius: 8px !important;
     font-size: 16px !important;
-    color: #1a1a1a !important;
+    color: #121631 !important;
     padding: 10px 14px !important;
 }
 
@@ -688,19 +702,20 @@ div[data-testid="stTextInput"] label {
 
 /* Buttons */
 button[kind="primary"] {
-    background: #1a1a1a !important;
+    background: #121631 !important;
     color: white !important;
     border: none !important;
     border-radius: 8px !important;
     font-size: 16px !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
     padding: 12px 20px !important;
     letter-spacing: 0.02em !important;
     min-height: 44px !important;
 }
 
 button[kind="primary"]:hover {
-    background: #333 !important;
+    background: #72C2C3 !important;
+    color: #121631 !important;
 }
 
 button[kind="secondary"] {
@@ -810,12 +825,12 @@ header {visibility: hidden;}
 
 head_logo, head_link = st.columns([3, 2])
 with head_logo:
-    st.markdown('<div class="cx-logo">Cortex</div>', unsafe_allow_html=True)
+    st.markdown(_logo_tag(56), unsafe_allow_html=True)
 with head_link:
     st.markdown(
-        '<div class="cx-meta" style="text-align:right;padding-top:10px">'
+        '<div class="cx-meta" style="text-align:right;padding-top:22px">'
         'Live read-only demo &nbsp;&middot;&nbsp; '
-        '<a href="https://github.com/ksolano220/cortex" style="color:#bbb;text-decoration:underline">Clone on GitHub</a>'
+        '<a href="https://github.com/ksolano220/cortex" style="color:#72C2C3;text-decoration:underline">Clone on GitHub</a>'
         '</div>',
         unsafe_allow_html=True,
     )
