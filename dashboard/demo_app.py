@@ -305,7 +305,7 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 
 .stApp {
-    background: #fafafa;
+    background: #ffffff;
     color: #121631;
     font-family: 'Quicksand', -apple-system, sans-serif;
 }
@@ -830,7 +830,7 @@ with head_link:
     st.markdown(
         '<div class="cx-meta" style="text-align:right;padding-top:42px">'
         'Live read-only demo &nbsp;&middot;&nbsp; '
-        '<a href="https://github.com/ksolano220/cortex" style="color:#72C2C3;text-decoration:underline">Clone on GitHub</a>'
+        '<a href="https://github.com/ksolano220/cortex" style="color:#3B9A9C;text-decoration:underline">Clone on GitHub</a>'
         '</div>',
         unsafe_allow_html=True,
     )
