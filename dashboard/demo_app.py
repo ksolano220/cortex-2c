@@ -1080,7 +1080,7 @@ def render_dashboard():
                 round_num = sdk.get("round", "?")
                 passed = sdk.get("passed", False)
 
-                st.markdown(f"**Round {round_num}**  \u2014  {'PASS' if passed else 'FAIL'}")
+                st.markdown(f"**Round {round_num}** &middot; {'PASS' if passed else 'FAIL'}")
                 if issues and issues != "None":
                     st.markdown(f"**Issues:**\n\n{issues}")
                 if feedback and feedback != "None":
@@ -1105,7 +1105,7 @@ def render_dashboard():
                     for v in violations:
                         st.markdown(f"- {v}")
                 else:
-                    st.markdown("Clean start \u2014 no inherited violations.")
+                    st.markdown("Clean start. No inherited violations.")
 
             # Agent shutdown
             elif sdk_type == "agent_shutdown":
